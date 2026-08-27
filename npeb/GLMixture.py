@@ -259,18 +259,18 @@ class GLMixture:
         
         ## initialize atoms
         if self.atoms_init is None:
-            print('Selecting all data points as atoms: done.')
+            #print('Selecting all data points as atoms: done.')
             self.atoms_init = X
         
         ## compute sparse kernel matrix
-        print('Computing kernel matrix:', end=' ')
+        #print('Computing kernel matrix:', end=' ')
         K = mvn_pdf(X, self.atoms_init, prec, self.prec_type, 
                     self.homoscedastic, n_chunks, 
                     log_prob_thresh, row_condition)
-        print('done.')
+        #print('done.')
         
         ## solve for the optimal weights given locations atoms_init
-        print('Solving for discretized NPMLE:', end=' ')
+        #print('Solving for discretized NPMLE:', end=' ')
         if solver=='mosek':
             w = solve_weights_mosek(K, 
                                    use_sparse=(log_prob_thresh > -float('Inf')), 
@@ -278,7 +278,7 @@ class GLMixture:
         elif solver=='GLPK':
             w = solve_weights_cvx(K, # no use_sparse option
                                   **solver_params)
-        print('done.')
+        #print('done.')
         
         ## threshold weights
         atoms = self.atoms_init[w > weight_thresh]
@@ -317,14 +317,14 @@ class GLMixture:
                     atoms = np.array(num/dnm)
                     
             if (score_every is not None) and (_ % score_every == 0): 
-                print('Running EM: iteration %s / %s' %(_, max_iter_em), 
-                      end='\r', flush=True)
+                #print('Running EM: iteration %s / %s' %(_, max_iter_em), 
+                #      end='\r', flush=True)
                 self.set_params(atoms, weights)
                 llik.append(self.score(X, prec))
        
         if (score_every is not None): 
-            print(' ' * (30 + 2*len(str(max_iter_em))), end='\r', flush=True)    
-            print('Running EM: done.', end='\r', flush=True)
+            #print(' ' * (30 + 2*len(str(max_iter_em))), end='\r', flush=True)    
+            #print('Running EM: done.', end='\r', flush=True)
             return llik
         
     def score(self, X, prec, n_chunks=1, 
